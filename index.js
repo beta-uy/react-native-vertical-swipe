@@ -180,8 +180,8 @@ class VerticalSwipe extends Component {
   componentWillMount(){
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: this.onStartShouldSetPanResponder,
-      onStartShouldSetPanResponderCapture: this.onStartShouldSetPanResponder,
-      onMoveShouldSetPanResponder: this.onStartShouldSetPanResponder,
+      // onStartShouldSetPanResponderCapture: this.onStartShouldSetPanResponder,
+      // onMoveShouldSetPanResponder: this.onStartShouldSetPanResponder,
       onMoveShouldSetPanResponderCapture: this.onStartShouldSetPanResponder,
       onPanResponderMove: this.onPanResponderMove,
       onPanResponderRelease: this.onPanResponderRelease,
