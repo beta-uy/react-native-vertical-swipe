@@ -60,11 +60,15 @@ class VerticalSwipe extends Component {
     this.stylesheets.content = this.props.style;
   };
 
-  onStartShouldSetPanResponder = (evt) => {
+  onStartShouldSetPanResponder = (evt, gestureState) => {
     if(this.state.isAnimating === true){
       return false;
     }
-
+    
+    if(Math.abs(gestureState.dy) < 5){
+      return false;
+    }
+    
     if(this.state.isOpen){
       if(evt.nativeEvent.pageY < (this.props.openSwipeThreshold + this.props.offsetTop) && evt.nativeEvent.pageY > this.props.offsetTop){
         return true;
@@ -80,7 +84,9 @@ class VerticalSwipe extends Component {
     if(this.state.isAnimating === true){
       return;
     }
-
+    if(Math.abs(gestureState.dx) < 5) {
+      return;
+    }
     if(this.state.isOpen === false){
       if(gestureState.dy < -(this.props.openSwipeThreshold) && this._hasActivatedThreshold === false){
         this._hasActivatedThreshold = true;
@@ -148,6 +154,9 @@ class VerticalSwipe extends Component {
     ).start(() => {
       this.setState({ isAnimating: false });
     })
+    if(this.props.onToggled){
+      this.props.onToggled(true);
+    }
   };
 
   close = () => {
@@ -164,6 +173,9 @@ class VerticalSwipe extends Component {
     ).start(() => {
       this.setState({ isAnimating: false });
     })
+    if(this.props.onToggled){
+      this.props.onToggled(false);
+    }
   };
 
   getMovableStyle = () => {
@@ -180,11 +192,15 @@ class VerticalSwipe extends Component {
   componentWillMount(){
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: this.onStartShouldSetPanResponder,
-      // onStartShouldSetPanResponderCapture: this.onStartShouldSetPanResponder,
-      // onMoveShouldSetPanResponder: this.onStartShouldSetPanResponder,
-      onMoveShouldSetPanResponderCapture: this.onStartShouldSetPanResponder,
+      onMoveShouldSetPanResponder: this.onStartShouldSetPanResponder,
       onPanResponderMove: this.onPanResponderMove,
       onPanResponderRelease: this.onPanResponderRelease,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => {
+        return false;
+      },
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return false;
+      },
     })
   }
   render() {
